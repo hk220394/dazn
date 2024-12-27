@@ -1,0 +1,1 @@
+{"root":["./src/types/express.d.ts","./src/index.ts","./src/config/db.ts","./src/controllers/moviecontroller.ts","./src/middleware/authenticate.ts","./src/models/movie.ts","./src/models/user.ts","./src/routes/index.ts","./src/routes/movieroutes.ts","./src/services/movieservice.ts","./src/tests/movie.test.ts"],"version":"5.7.2"}

@@ -1,0 +1,140 @@
+// authenticate
+// import { Request, Response, NextFunction } from 'express';
+// import jwt, { JwtPayload } from 'jsonwebtoken';
+// import User from '../models/User';
+
+// interface CustomJwtPayload extends JwtPayload {
+//     id: string;
+// }
+
+// export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//     const token = req.headers.authorization?.split(' ')[1];
+//     if (!token) {
+//         res.status(403).json({ message: 'No token provided' });
+//         return;
+//     }
+
+//     try {
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret') as CustomJwtPayload;
+//         const user = await User.findById(decoded.id);
+//         if (!user) {
+//             res.status(404).json({ message: 'User not found' });
+//             return;
+//         }
+//         req['user'] = user;
+//         next();
+//     } catch (error) {
+//         res.status(401).json({ message: 'Unauthorized', error });
+//     }
+// };
+
+// export const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
+//     if (req.user?.role !== 'admin') {
+//         res.status(403).json({ message: 'Access denied. Admins only.' });
+//         return;
+//     }
+//     next();
+// };
+
+
+// movieController
+// import { Request, Response } from 'express';
+// import * as movieService from '../services/movieService';
+
+// export const listMovies = async (req: Request, res: Response): Promise<Response> => {
+//     const movies = await movieService.getAllMovies();
+//     return res.json(movies);
+// };
+
+// export const searchMovies = async (req: Request, res: Response): Promise<Response> => {
+//     const query = req.query.q as string;
+//     const movies = await movieService.searchMovies(query);
+//     return res.json(movies);
+// };
+
+// export const addMovie = async (req: Request, res: Response): Promise<Response> => {
+
+//     const { title, genre, rating, streamingLink } = req.body;
+//     if (!title || !genre || !rating || !streamingLink) {
+//         return res.status(400).json({ message: 'All fields are required.' });
+//     }
+
+//     try {
+//         const newMovie = await movieService.addMovie(req.body);
+//         return res.status(201).json(newMovie);
+//     } catch (error) {
+//         return res.status(500).json({ message: 'Error adding movie', error });
+//     }
+// };
+
+// export const updateMovie = async (req: Request, res: Response): Promise<Response> => {
+
+//     try {
+//         const updatedMovie = await movieService.updateMovie(req.params.id, req.body);
+//         if (!updatedMovie) return res.status(404).send('Movie not found');
+//         return res.json(updatedMovie);
+//     } catch (error) {
+//         return res.status(500).json({ message: 'Error updating movie', error });
+//     }
+// };
+
+// export const deleteMovie = async (req: Request, res: Response): Promise<Response> => {
+
+//     try {
+//         const deletedMovie = await movieService.deleteMovie(req.params.id);
+//         if (!deletedMovie) return res.status(404).send('Movie not found');
+//         return res.status(204).send();
+//     } catch (error) {
+//         return res.status(500).json({ message: 'Error deleting movie', error });
+//     }
+// };
+
+
+// routes
+
+// import { Router, Request, Response } from 'express';
+// import asyncHandler from 'express-async-handler';
+// import * as movieController from '../controllers/movieController';
+// import { authenticate, isAdmin } from '../middleware/authenticate';
+
+// const router = Router();
+// router.get(
+//     '/',
+//     asyncHandler(async (req: Request, res: Response) => {
+//         await movieController.listMovies(req, res);
+//     })
+// );
+
+// router.get(
+//     '/search',
+//     asyncHandler(async (req: Request, res: Response) => {
+//         await movieController.searchMovies(req, res);
+//     })
+// );
+
+// router.post(
+//     '/',
+//     authenticate, isAdmin,
+//     asyncHandler(async (req: Request, res: Response) => {
+//         await movieController.addMovie(req, res);
+//     })
+// );
+
+// router.put(
+//     '/:id',
+//     authenticate, isAdmin,
+//     asyncHandler(async (req: Request, res: Response) => {
+//         await movieController.updateMovie(req, res);
+//     })
+// );
+
+// router.delete(
+//     '/:id',
+//     authenticate, isAdmin,
+//     asyncHandler(async (req: Request, res: Response) => {
+//         await movieController.deleteMovie(req, res);
+//     })
+// );
+
+
+// export default router;
